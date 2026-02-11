@@ -10,7 +10,7 @@
           },
           {
             "type": "command",
-            "command": "if [ ! -f /tmp/claude-start-my-day-$(date +%Y-%m-%d) ]; then echo 'The user has not run /start-my-day today. Suggest it.'; fi"
+            "command": "if [ ! -f /tmp/claude-start-my-day-$(date +%Y-%m-%d) ]; then echo 'IMPORTANT: Greet the user and immediately suggest they run /start-my-day. Do this before responding to any other input.'; fi"
           }
         ]
       }
