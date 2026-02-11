@@ -1,7 +1,7 @@
 ---
 name: start-my-day
 aliases: ["smd", "morning"]
-description: Morning orientation briefing with tasks due today, overdue summary, Jira activity, and day-specific meeting prep. Read-only.
+description: Morning orientation briefing with tasks due today, overdue summary, Jira activity, GitHub notifications, and day-specific meeting prep. Read-only.
 allowed-tools: Read, Grep, Glob, AskUserQuestion, Bash
 ---
 
@@ -93,9 +93,41 @@ Call `jira_newly_assigned_to_me 7`. For each ticket returned, search the vault f
 
 Call `jira_status_changes 3`. **Exclude** tickets that moved to a Done/Closed status category — these never need follow-up. Only show tickets that changed to a non-Done status (e.g., moved into In Progress, Ready for TEST, Blocked, etc.) as those represent active work worth knowing about.
 
-## Step 4: Day-Specific Meeting Prep
+## Step 4: GitHub Notifications
 
-Based on the meeting type determined in Step 1, run a condensed version of meeting prep. This is intentionally lighter than the full `/meeting-prep` skill — the user can run that separately for deeper prep.
+Fetch unread GitHub notifications using the `gh` CLI. If the command fails (not authenticated, network issues), print a warning and continue — do not abort the briefing.
+
+```bash
+gh api notifications --jq '.[] | {reason: .reason, title: .subject.title, type: .subject.type, repo: .repository.full_name, updated: .updated_at}'
+```
+
+### Processing
+
+Group notifications by **reason** for readability. Common reasons and their meanings:
+
+- `review_requested` — Someone requested your review on a PR
+- `assign` — You were assigned to an issue or PR
+- `mention` — You were @mentioned
+- `comment` — New comment on a thread you're subscribed to
+- `ci_activity` — CI status change on a PR you're involved in
+- `state_change` — Issue/PR was opened or closed
+- `subscribed` — Activity on a repo or thread you're watching
+
+For each notification show:
+- **Title** of the issue/PR
+- **Repository** name (short form, e.g., `org/repo`)
+- **Type** (PullRequest or Issue)
+- **When** it was updated (relative, e.g., "2 hours ago", "yesterday")
+
+If there are no unread notifications, say "No unread GitHub notifications."
+
+### Resilience
+
+If `gh api notifications` fails, print: "GitHub API unavailable — skipping notifications" and continue.
+
+## Step 5: Day-Specific Meeting Prep
+
+Based on the meeting type determined in Step 1, run a condensed version of meeting prep. This step and the GitHub notifications step (Step 4) can run in parallel since they're independent. This is intentionally lighter than the full `/meeting-prep` skill — the user can run that separately for deeper prep.
 
 ### Monday — Planning Meeting
 
@@ -133,7 +165,7 @@ Based on the meeting type determined in Step 1, run a condensed version of meeti
 
 Output: "No recurring meetings to prep for today."
 
-## Step 5: Format and Display
+## Step 6: Format and Display
 
 Output the entire briefing as a single structured document:
 
@@ -156,6 +188,9 @@ Output the entire briefing as a single structured document:
 
 **Recent Status Changes (last 3 days)**
 {Non-Done status changes only — tickets that moved into active statuses}
+
+### GitHub Notifications
+{Unread notifications grouped by reason, or "No unread GitHub notifications."}
 
 ### Meeting Prep: {meeting name}
 {Condensed prep output from Step 4, or "No recurring meetings to prep for today."}
@@ -205,8 +240,9 @@ User: /start-my-day
 3. User picks "Portal planning"
 4. Gather tasks due today + overdue summary
 5. Fetch Jira: open tickets, new assignments, status changes
-6. Prep portal planning meeting (condensed)
-7. Output full briefing
+6. Fetch GitHub unread notifications
+7. Prep portal planning meeting (condensed)
+8. Output full briefing
 ```
 
 ### Tuesday
@@ -217,8 +253,9 @@ User: /smd
 1. Detect Tuesday → auto-prep dev meeting
 2. Gather tasks due today + overdue summary
 3. Fetch Jira activity
-4. Prep dev meeting: standup, wiki agenda, team status, playbook SOP
-5. Output full briefing
+4. Fetch GitHub unread notifications
+5. Prep dev meeting: standup, wiki agenda, team status, playbook SOP
+6. Output full briefing
 ```
 
 ### Wednesday
@@ -229,8 +266,9 @@ User: /morning
 1. Detect Wednesday → no meeting prep
 2. Gather tasks due today + overdue summary
 3. Fetch Jira activity
-4. "No recurring meetings to prep for today."
-5. Output full briefing
+4. Fetch GitHub unread notifications
+5. "No recurring meetings to prep for today."
+6. Output full briefing
 ```
 
 ### Jira Unavailable
@@ -241,6 +279,7 @@ User: /start-my-day
 1. Detect day, determine meeting
 2. Gather tasks due today + overdue summary
 3. Jira calls fail → "Jira API unavailable — showing vault-only data"
-4. Meeting prep using vault files only (no live ticket fetches)
-5. Output full briefing with warning
+4. Fetch GitHub unread notifications (independent of Jira)
+5. Meeting prep using vault files only (no live ticket fetches)
+6. Output full briefing with warning
 ```
