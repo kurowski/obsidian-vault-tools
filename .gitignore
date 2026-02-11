@@ -1,0 +1,18 @@
+# Ignore everything by default (vault content is synced by Obsidian Sync)
+*
+
+# Track tooling directories
+!.docker/
+!.docker/*
+!.claude/
+!.claude/*
+!.claude/skills/
+!.claude/skills/*/
+!.claude/skills/**
+
+# Track root config files
+!.gitignore
+!.claudeignore
+
+# Machine-specific -- do not track
+.claude/settings.local.json
