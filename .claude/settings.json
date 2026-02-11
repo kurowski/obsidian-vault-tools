@@ -7,6 +7,10 @@
           {
             "type": "command",
             "command": "cd /workspace && gh auth setup-git && git pull 2>&1"
+          },
+          {
+            "type": "command",
+            "command": "if [ ! -f /tmp/claude-start-my-day-$(date +%Y-%m-%d) ]; then echo 'The user has not run /start-my-day today. Suggest it.'; fi"
           }
         ]
       }

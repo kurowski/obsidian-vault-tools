@@ -221,6 +221,13 @@ Output the entire briefing as a single structured document:
 - Continue with the rest of the briefing (tasks, meeting prep from vault files)
 - Do not abort or retry excessively
 
+### Sentinel File
+
+- After displaying the briefing, touch the sentinel file so the SessionStart hook knows the skill has been run today:
+  ```bash
+  touch /tmp/claude-start-my-day-$(date +%Y-%m-%d)
+  ```
+
 ### User Experience
 
 - Keep the briefing scannable — this is a quick morning orientation, not a deep report
