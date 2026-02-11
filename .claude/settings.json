@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /workspace && gh auth setup-git && git pull 2>&1"
+          }
+        ]
+      }
+    ]
+  }
+}
