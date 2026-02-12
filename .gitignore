@@ -13,6 +13,8 @@
 # Track root config files
 !.gitignore
 !.claudeignore
+!README.md
+!CLAUDE.md
 
 # Machine-specific -- do not track
 .claude/settings.local.json
