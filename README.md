@@ -53,7 +53,7 @@ docker run -d \
   claude-obsidian
 ```
 
-If you're using Anthropic Foundry instead of a direct API key, replace the `ANTHROPIC_API_KEY` line with Foundry variables:
+If you're using Azure Foundry instead of a direct API key, replace the `ANTHROPIC_API_KEY` line with Foundry variables:
 
 ```bash
 docker run -d \
