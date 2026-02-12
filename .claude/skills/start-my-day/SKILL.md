@@ -31,6 +31,15 @@ Search the entire vault but **skip** these directories:
 - `Clippings/`
 - `Learning from Dutch/`
 
+## Step 0: Pull Latest Wiki and Playbook
+
+Pull the latest changes for the cloned repos so the briefing uses up-to-date content. Run both pulls in parallel. If either pull fails (network issues, merge conflicts), print a warning and continue — stale data is better than no data.
+
+```bash
+git -C /workspace/github-wiki pull
+git -C /workspace/playbook pull
+```
+
 ## Step 1: Determine Day of Week
 
 Parse {{CURRENT_DATE}} to determine the day of week.
