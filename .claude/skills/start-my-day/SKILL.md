@@ -49,7 +49,11 @@ Parse {{CURRENT_DATE}} to determine the day of week.
   - If **refinement**: auto-select `refinement meeting.md`
   - Also offer a "Neither / skip meeting prep" option
 - **Tuesday or Thursday**: Auto-prep for dev meeting (no question needed)
-- **Any other day** (Wednesday, Friday, weekend): Skip meeting prep entirely
+- **Friday**: Auto-prep for mobile app meeting with Helio (no question needed)
+- **Wednesday**: Use AskUserQuestion to ask the user whether there is an **IT departmental meeting** today (this is monthly, not every Wednesday).
+  - If **yes**: auto-select `it monthly meeting.md`
+  - If **no**: skip meeting prep
+- **Any other day** (weekend): Skip meeting prep entirely
 
 Store the result as the **meeting type** for Step 4.
 
@@ -170,6 +174,24 @@ Based on the meeting type determined in Step 1, run a condensed version of meeti
 6. **Playbook SOP**: Read `/workspace/playbook/docs/standard-operating-procedures/conduct-a-developer-meeting.md` and include a brief reminder of the meeting flow.
 7. Synthesize 3-5 suggested discussion topics.
 
+### Wednesday — IT Monthly Meeting
+
+1. Read `it monthly meeting.md` — find the most recent dated section and summarize in 3-5 bullets.
+2. Find open tasks in the file.
+3. Gather recent team accomplishments from `dev meeting.md` and direct report 1-on-1 files — these are useful for the user's report to the department.
+4. Extract Jira tickets from the file (if any) and fetch status.
+5. Synthesize 3-5 suggested topics or items to raise.
+
+### Friday — Mobile App Meeting with Helio
+
+1. Read `mobile app meeting with helio.md` — find the most recent dated section and summarize in 3-5 bullets.
+2. Find open tasks in the file.
+3. Search the vault for recent mentions of "mobile app", "Tauri", "Expo", "Capacitor", and related keywords since the last meeting date.
+4. Check `Helio 1on1.md` for recent entries referencing the mobile app or related work.
+5. Check `mobile app project charter.md` for any updates.
+6. Extract Jira tickets from the file (if any) and fetch status.
+7. Synthesize 3-5 suggested discussion topics.
+
 ### Other Days (or "skip" chosen on Monday)
 
 Output: "No recurring meetings to prep for today."
@@ -274,16 +296,44 @@ User: /smd
 6. Output full briefing
 ```
 
-### Wednesday
+### Wednesday with IT Monthly
 
 ```
 User: /morning
 
-1. Detect Wednesday → no meeting prep
+1. Detect Wednesday → ask: IT departmental meeting today?
+2. User picks "Yes"
+3. Gather tasks due today + overdue summary
+4. Fetch Jira activity
+5. Fetch GitHub unread notifications
+6. Prep IT monthly meeting: recent section summary, team accomplishments, open tasks
+7. Output full briefing
+```
+
+### Wednesday without IT Monthly
+
+```
+User: /morning
+
+1. Detect Wednesday → ask: IT departmental meeting today?
+2. User picks "No"
+3. Gather tasks due today + overdue summary
+4. Fetch Jira activity
+5. Fetch GitHub unread notifications
+6. "No recurring meetings to prep for today."
+7. Output full briefing
+```
+
+### Friday
+
+```
+User: /smd
+
+1. Detect Friday → auto-prep mobile app meeting with Helio
 2. Gather tasks due today + overdue summary
 3. Fetch Jira activity
 4. Fetch GitHub unread notifications
-5. "No recurring meetings to prep for today."
+5. Prep mobile app meeting: recent notes, project charter, Helio's 1-on-1 context, vault mentions
 6. Output full briefing
 ```
 
