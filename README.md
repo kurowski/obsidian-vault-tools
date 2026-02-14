@@ -70,6 +70,8 @@ docker run -d \
   claude-obsidian
 ```
 
+On first run, the container automatically clones the `playbook/` (UCEAP/itse-playbook) and `github-wiki/` (UCEAP/.github-private.wiki) repos into the workspace if they don't already exist. This requires `GH_TOKEN` to be set. If cloning fails (no network, bad token, etc.), the container still starts normally.
+
 Create the persistent config directory first if it doesn't exist:
 
 ```bash
@@ -101,7 +103,7 @@ Then start a session with `oc`. You can resume a previous session with `ocr`.
 | `JIRA_API_TOKEN` | No | Jira integration for skills |
 | `JIRA_BASE_URL` | No | Jira instance URL |
 | `JIRA_EMAIL` | No | Jira account email |
-| `GH_TOKEN` | No | GitHub API access for notifications |
+| `GH_TOKEN` | No | GitHub API access for notifications and automatic repo cloning |
 
 \* Provide either `ANTHROPIC_API_KEY` or the three `FOUNDRY` variables.
 
