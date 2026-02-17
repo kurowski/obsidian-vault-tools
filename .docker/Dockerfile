@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     ripgrep \
     fzf \
     jq \
+    pandoc \
     python3 \
     python3-pip \
     nodejs \
